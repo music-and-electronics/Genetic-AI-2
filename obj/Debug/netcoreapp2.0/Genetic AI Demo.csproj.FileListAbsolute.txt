@@ -1,0 +1,11 @@
+C:\Users\kjh97\source\repos\Genetic AI Demo\bin\Debug\netcoreapp2.0\Genetic AI Demo.deps.json
+C:\Users\kjh97\source\repos\Genetic AI Demo\bin\Debug\netcoreapp2.0\Genetic AI Demo.runtimeconfig.json
+C:\Users\kjh97\source\repos\Genetic AI Demo\bin\Debug\netcoreapp2.0\Genetic AI Demo.runtimeconfig.dev.json
+C:\Users\kjh97\source\repos\Genetic AI Demo\bin\Debug\netcoreapp2.0\Genetic AI Demo.dll
+C:\Users\kjh97\source\repos\Genetic AI Demo\obj\Debug\netcoreapp2.0\Genetic AI Demo.csprojAssemblyReference.cache
+C:\Users\kjh97\source\repos\Genetic AI Demo\obj\Debug\netcoreapp2.0\Genetic AI Demo.csproj.CoreCompileInputs.cache
+C:\Users\kjh97\source\repos\Genetic AI Demo\obj\Debug\netcoreapp2.0\Genetic AI Demo.AssemblyInfoInputs.cache
+C:\Users\kjh97\source\repos\Genetic AI Demo\obj\Debug\netcoreapp2.0\Genetic AI Demo.AssemblyInfo.cs
+C:\Users\kjh97\source\repos\Genetic AI Demo\bin\Debug\netcoreapp2.0\Genetic AI Demo.pdb
+C:\Users\kjh97\source\repos\Genetic AI Demo\obj\Debug\netcoreapp2.0\Genetic AI Demo.dll
+C:\Users\kjh97\source\repos\Genetic AI Demo\obj\Debug\netcoreapp2.0\Genetic AI Demo.pdb
