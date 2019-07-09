@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace Genetic_AI_Demo
 {
+
     class Genetic_Json_Data
     {
         JObject genetic_raw_object { get; set; }
@@ -13,6 +14,7 @@ namespace Genetic_AI_Demo
         List<int[]> Survived_Genes = new List<int[]>();
 
         int[] genetic_target_data;
+        int probability;
         string raw_json_data { get; set; }
 
         public Genetic_Json_Data()
@@ -20,6 +22,12 @@ namespace Genetic_AI_Demo
             Json_parser();
             Initialize();
              Survive(Genetic_Set, genetic_target_data);
+            //while (Score_Calculation(Survived_Genes[0], genetic_target_data) > 10)
+            {
+                Gene_generator(Survived_Genes);
+                Survive(Genetic_Set, genetic_target_data);
+
+            }
         }
         
         private void Initialize( )
@@ -55,7 +63,6 @@ namespace Genetic_AI_Demo
                     Random random_generator = new Random();
                     genetic_member[k] = random_generator.Next((int)genetic_raw_object["Genetic Range"][0], (int)genetic_raw_object["Genetic Range"][1]);
                     Console.Write(genetic_member[k]);
-
                 }
                 Console.WriteLine();
                 Genetic_Set.Add(genetic_member);
@@ -64,22 +71,49 @@ namespace Genetic_AI_Demo
         }
 
         private void Gene_generator(List<int[]> Survived_Genes)
-        { 
-        }
+        {
 
+            for (int i=0;i<Genetic_Set.Count;i++)
+            {
+                for (int k=0;k<Survived_Genes[0].Length;k++)
+                {
+
+
+                }
+            }
+            Survived_Genes.RemoveAt(0);
+            Survived_Genes.RemoveAt(0);
+        }
 
         private void Survive(List<int[]> Genetic_Set, int[] genetic_target_data)
         {
-            List<Dictionary<int, int[]>> Score = new List<Dictionary<int, int[]>>();
+            List<Score_Data> Score = new List<Score_Data>();
             foreach(int[] gene in Genetic_Set)
             {
-                Dictionary<int, int[]> tmp_data = new Dictionary<int, int[]>();
-                tmp_data[Score_Calculation(genetic_target_data, gene)] = gene;
-                Score.Add(tmp_data);
+                Score.Add(new Score_Data(Score_Calculation(genetic_target_data,gene),gene));
             }
-            foreach(Dictionary<int,int[]> values in Score  )
+
+            Score.Sort(
+                delegate (Score_Data A, Score_Data B)
+                {
+                    if (A.score > B.score) return 1;
+                    else if (A.score == B.score) return 0;
+                    else return -1;
+                }
+            );
+
+
+            Survived_Genes.Add((Score[0].gene_data));
+            Survived_Genes.Add((Score[1].gene_data));
+
+            foreach(Score_Data score_Data in Score)
             {
-                Console.WriteLine(values.ElementAt(0));
+                Console.Write(score_Data.score+":");
+                for(int i=0;i<score_Data.gene_data.Length;i++)
+                {
+                    Console.Write(score_Data.gene_data[i]);
+                }
+                Console.WriteLine();
             }
         }
 
@@ -104,5 +138,15 @@ namespace Genetic_AI_Demo
         }
     }
 
-    
+    public class Score_Data
+    {
+        public int score { get; set; }
+        public int[] gene_data { get; set; }
+        public Score_Data(int tmp_score, int[] tmp_gene_data)
+        {
+            gene_data = tmp_gene_data;
+            score = tmp_score;
+        }
+
+    }
 }
