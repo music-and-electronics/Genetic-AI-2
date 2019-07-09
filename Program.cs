@@ -9,40 +9,40 @@ namespace Genetic_AI_Demo
 
     class Genetic_Json_Data
     {
+        string raw_json_data { get; set; }
         JObject genetic_raw_object { get; set; }
         List<int[]> Genetic_Set = new List<int[]>();
         List<int[]> Survived_Genes = new List<int[]>();
-        int generation = 0;
-
         int[] genetic_target_data;
 
-        string raw_json_data { get; set; }
+        int generation = 0;
 
         public Genetic_Json_Data()
         {
             Json_parser();
-            Initialize();
-             Survive(Genetic_Set, genetic_target_data);
+            Gene_Initialize();
+            Survive(Genetic_Set, genetic_target_data);
 
             while (Score_Calculation(genetic_target_data,Survived_Genes[0])>0)
             {
                 Gene_generator(Survived_Genes);
                 Survive(Genetic_Set, genetic_target_data);
-
             }
         }
         
-        private void Initialize( )
+        private void Gene_Initialize( )
         {
             genetic_raw_object = JObject.Parse(raw_json_data);
             genetic_target_data = new int[(int)genetic_raw_object["Genetic Length"]];
             Gene_generator();
+
             Console.Write("Goal Data is: ");
 
             for(int i=0;i<(int)genetic_raw_object["Genetic Length"];i++)
             {
                 Random random_generator = new Random();
                 genetic_target_data[i] = random_generator.Next((int)genetic_raw_object["Genetic Range"][0], (int)genetic_raw_object["Genetic Range"][1]);
+
                 Console.Write(genetic_target_data[i]);
             }
 
@@ -64,9 +64,12 @@ namespace Genetic_AI_Demo
                 {
                     Random random_generator = new Random();
                     genetic_member[k] = random_generator.Next((int)genetic_raw_object["Genetic Range"][0], (int)genetic_raw_object["Genetic Range"][1]);
+
                     Console.Write(genetic_member[k]);
                 }
+
                 Console.WriteLine();
+
                 Genetic_Set.Add(genetic_member);
             }
 
@@ -75,6 +78,7 @@ namespace Genetic_AI_Demo
         private void Gene_generator(List<int[]> Survived_Genes)
         {
             Random random = new Random();
+
             for (int i = 0; i < 2; i++)
             {
                 for (int k = 0; k < Survived_Genes[0].Length; k++)
@@ -82,35 +86,39 @@ namespace Genetic_AI_Demo
                     Genetic_Set[i][k] = Survived_Genes[i][k];
                 }
             }
+
             for (int i = 2; i < Genetic_Set.Count-1; i++)
             {
-                int rand_num = random.Next(Survived_Genes[0].Length);
-                int coin_flip = random.Next(2);
-                double rand_num2 = (double)genetic_raw_object["Mutant Probability"] * 100;
-                int mutant = random.Next((int)rand_num2);
+                int genetic_mix_rand_num = random.Next(Survived_Genes[0].Length);
+                int test_coin_flip = random.Next(2);
+                double mutant_probabilty = (double)genetic_raw_object["Mutant Probability"] * 100;
+                int mutant = random.Next((int)mutant_probabilty);
 
-                if (mutant == 2)
+                if (test_coin_flip==0)
                 {
-                        for (int k = 0; k < rand_num; k++)
+                        for (int k = 0; k < genetic_mix_rand_num; k++)
                         {
                             Genetic_Set[i][k] = Survived_Genes[0][k];
                         }
-                        for (int k = rand_num; k < Survived_Genes[0].Length; k++)
+                        for (int k = genetic_mix_rand_num; k < Survived_Genes[0].Length; k++)
                         {
                             Genetic_Set[i][k] = Survived_Genes[1][k];
                         }
-                    Genetic_Set[i][rand_num] = random.Next((int)genetic_raw_object["Genetic Range"][0], (int)genetic_raw_object["Genetic Range"][1]);
+                    Genetic_Set[i][genetic_mix_rand_num] = random.Next((int)genetic_raw_object["Genetic Range"][0], (int)genetic_raw_object["Genetic Range"][1]);
                 }
                 else
                 {
-                        for(int k=0;k<rand_num/2;k++)
-                        {
-                            Genetic_Set[i][2 * k + 1] = Survived_Genes[0][k];
-                        }
-                        for (int k = 1; k < rand_num/2; k++)
-                        {
-                            Genetic_Set[i][2*k] = Survived_Genes[1][k];
-                        }
+                    for (int k = 0; k < genetic_mix_rand_num / 2; k++)
+                    {
+                        int odd = 2 * k + 1;
+                        Genetic_Set[i][odd] = Survived_Genes[0][k];
+                    }
+
+                    for (int k = 1; k < genetic_mix_rand_num / 2; k++)
+                    {
+                        int even = 2 * k;
+                        Genetic_Set[i][even] = Survived_Genes[1][k];
+                    }
                 }
             }
 
@@ -139,6 +147,7 @@ namespace Genetic_AI_Demo
             Survived_Genes.Add((Score[0].gene_data));
             Survived_Genes.Add((Score[1].gene_data));
 
+
             Console.Write("Target Data is : ");
             for (int i=0;i<genetic_target_data.Length;i++)
             {
@@ -159,7 +168,6 @@ namespace Genetic_AI_Demo
             }
             generation++;
         }
-
 
         private int Score_Calculation(int[] goal_gene, int[] operand_gene)
         {

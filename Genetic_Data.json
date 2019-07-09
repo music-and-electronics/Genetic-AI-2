@@ -1,6 +1,6 @@
 {
     "Entity":10,
     "Mutant Probability":0.1,
-    "Genetic Length":20,
-    "Genetic Range":[1,9]
+    "Genetic Length":100,
+    "Genetic Range":[0,20]
 }
