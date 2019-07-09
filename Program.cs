@@ -12,9 +12,10 @@ namespace Genetic_AI_Demo
         JObject genetic_raw_object { get; set; }
         List<int[]> Genetic_Set = new List<int[]>();
         List<int[]> Survived_Genes = new List<int[]>();
+        int generation = 0;
 
         int[] genetic_target_data;
-        int probability;
+
         string raw_json_data { get; set; }
 
         public Genetic_Json_Data()
@@ -22,7 +23,8 @@ namespace Genetic_AI_Demo
             Json_parser();
             Initialize();
              Survive(Genetic_Set, genetic_target_data);
-            //while (Score_Calculation(Survived_Genes[0], genetic_target_data) > 10)
+
+            while (Score_Calculation(genetic_target_data,Survived_Genes[0])>0)
             {
                 Gene_generator(Survived_Genes);
                 Survive(Genetic_Set, genetic_target_data);
@@ -72,15 +74,46 @@ namespace Genetic_AI_Demo
 
         private void Gene_generator(List<int[]> Survived_Genes)
         {
-
-            for (int i=0;i<Genetic_Set.Count;i++)
+            Random random = new Random();
+            for (int i = 0; i < 2; i++)
             {
-                for (int k=0;k<Survived_Genes[0].Length;k++)
+                for (int k = 0; k < Survived_Genes[0].Length; k++)
                 {
-
-
+                    Genetic_Set[i][k] = Survived_Genes[i][k];
                 }
             }
+            for (int i = 2; i < Genetic_Set.Count-1; i++)
+            {
+                int rand_num = random.Next(Survived_Genes[0].Length);
+                int coin_flip = random.Next(2);
+                double rand_num2 = (double)genetic_raw_object["Mutant Probability"] * 100;
+                int mutant = random.Next((int)rand_num2);
+
+                if (mutant == 2)
+                {
+                        for (int k = 0; k < rand_num; k++)
+                        {
+                            Genetic_Set[i][k] = Survived_Genes[0][k];
+                        }
+                        for (int k = rand_num; k < Survived_Genes[0].Length; k++)
+                        {
+                            Genetic_Set[i][k] = Survived_Genes[1][k];
+                        }
+                    Genetic_Set[i][rand_num] = random.Next((int)genetic_raw_object["Genetic Range"][0], (int)genetic_raw_object["Genetic Range"][1]);
+                }
+                else
+                {
+                        for(int k=0;k<rand_num/2;k++)
+                        {
+                            Genetic_Set[i][2 * k + 1] = Survived_Genes[0][k];
+                        }
+                        for (int k = 1; k < rand_num/2; k++)
+                        {
+                            Genetic_Set[i][2*k] = Survived_Genes[1][k];
+                        }
+                }
+            }
+
             Survived_Genes.RemoveAt(0);
             Survived_Genes.RemoveAt(0);
         }
@@ -106,15 +139,25 @@ namespace Genetic_AI_Demo
             Survived_Genes.Add((Score[0].gene_data));
             Survived_Genes.Add((Score[1].gene_data));
 
+            Console.Write("Target Data is : ");
+            for (int i=0;i<genetic_target_data.Length;i++)
+            {
+                Console.Write(genetic_target_data[i]);
+            }
+            Console.WriteLine();
+
+            Console.WriteLine($"Generation : {generation}");
             foreach(Score_Data score_Data in Score)
             {
-                Console.Write(score_Data.score+":");
+                     
+                Console.Write("Score: "+score_Data.score+", Data :");
                 for(int i=0;i<score_Data.gene_data.Length;i++)
                 {
                     Console.Write(score_Data.gene_data[i]);
                 }
                 Console.WriteLine();
             }
+            generation++;
         }
 
 
@@ -129,15 +172,6 @@ namespace Genetic_AI_Demo
         }
     }
 
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            Genetic_Json_Data Genetic_Json_Data = new Genetic_Json_Data();
-            
-        }
-    }
-
     public class Score_Data
     {
         public int score { get; set; }
@@ -147,6 +181,14 @@ namespace Genetic_AI_Demo
             gene_data = tmp_gene_data;
             score = tmp_score;
         }
+    }
 
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Genetic_Json_Data Genetic_Json_Data = new Genetic_Json_Data();
+            
+        }
     }
 }
